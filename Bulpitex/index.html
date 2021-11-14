@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {background-color: rgb(128, 128, 128);}
+
+        #cords { list-style-type: none; margin: 0; padding: 0; }
+
+        video {
+        background: #222;
+            margin: 0 0 20px 0;
+            --width: 60%;
+            width: var(--width);
+            height: calc(var(--width) * 0.75);
+        }
+
+    </style>
+</head>
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <div id="container">
+
+        <div id="dane">
+            <div id="screenSize"></div>
+        </div>
+
+        <div id="screenShareBtn" style="cursor: pointer;" disabled>Udostępnij ekran</div>
+        <!--<div id="screen" style="background-color: black; width: 800px; height:500px;"></div>-->
+        <video id="screenShare" autoplay playsinline muted></video>
+
+        <div id="role"></div>
+        <id id="form">
+            X: <input type="text" id='x' /> <br />
+            Y: <input type="text" id='y' /> <br />
+            <button>Ustaw</button> <br />
+        </id>
+        
+        <div id="roleInfo">
+            Rola: <input type="text" id="roleData" /> <br />
+            <button id="setRole">Ustaw rolę</button>
+        </div>
+        
+        <ul id="cords"></ul>
+
+    </div>
+    
+    <script src="static/dane.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <!--<script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>-->
+    <!--<script src="static/peer.min.js"></script>-->
+    
+
+    <script>
+        var socket = io();
+        
+        var role='';
+        var run = false;
+        
+        var input = document.getElementById('x');
+        var input2 = document.getElementById('y');
+        var roleVal = document.getElementById('roleData');
+        var screen = document.getElementById('screenShare');
+
+        /*screen.addEventListener('mousemove',function(e){
+            var posX = $(this).offset().left;
+            var posY = $(this).offset().top;
+            
+            var x = e.pageX - posX;
+            var y = e.pageY - posY;
+            var str = x+" "+y;
+            socket.emit('sendCoords',{x:x, y:y});
+        });*/
+
+        
+
+        document.getElementById('form').addEventListener('click',function(e){
+            //e.preventDefault();
+            if(input.value && input2.value){
+                //socket.emit('coords2', {x:input.value, y:input2.value});
+                socket.emit('sendCoordsFromInputs', {x:input.value, y:input2.value});
+                input.value = '';
+                input2.value = '';
+            }
+        });
+
+        document.getElementById('setRole').addEventListener('click',function(e){
+            //e.preventDefault();
+            if(roleVal.value){
+                role=roleVal.value;
+                $('#role').html(role);
+                console.log(role);
+                run=true;
+            }
+        });
+        
+
+        screen.addEventListener('mousemove',function(e){
+            var posX = $(this).offset().left;
+            var posY = $(this).offset().top;
+            
+            var x = e.pageX - posX;
+            var y = e.pageY - posY;
+            var str = x+" "+y;
+            //$('#cords').html(str);
+            if(screen.disabled){
+                socket.emit('sendCoords',{x:x, y:y});
+            }
+            if(run && role=='client'){
+                socket.emit('sendCoordFromMouseMove',{x:x, y:y,r:role});
+            }
+        });
+
+
+        socket.on('setCoordsToDiv', function(data){
+            $('#cords').html(data.x+" "+data.y);
+        });
+
+        jQuery.fn.single_double_click = function(single_click_callback, double_click_callback, timeout) {
+            return this.each(function(){
+                var clicks = 0, self = this;
+                jQuery(this).click(function(event){
+                    clicks++;
+                    if (clicks == 1) {
+                        setTimeout(function(){
+                        if(clicks == 1) {
+                            single_click_callback.call(self, event);
+                        } else {
+                            double_click_callback.call(self, event);
+                        }
+                    clicks = 0;
+                    }, timeout || 300);
+                }
+            });
+            });
+        }
+
+
+        $("#screenShare").single_double_click(function(event){
+            if(!screen.disabled){
+                var posX = $(this).offset().left;
+                var posY = $(this).offset().top;
+                
+                var x = event.pageX - posX;
+                var y = event.pageY - posY;
+                //alert("1 kliknięcie "+x+" "+y);
+                socket.emit('sendClick',{x:x,y:y});
+            }
+        },function(event){
+            if(!screen.disabled){
+                var posX = $(this).offset().left;
+                var posY = $(this).offset().top;
+                
+                var x = event.pageX - posX;
+                var y = event.pageY - posY;
+                //alert("2 kliknięcia "+x+" "+y);
+                socket.emit('sendDoubleClick',{x:x,y:y});
+            }
+        });
+
+        /*$(window).bind('keyup', function(e){
+            socket.emit('sendKey',{k:e.key});
+        });*/
+        
+
+    </script>
+
+    <div videoTest></div>
+
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="static/WebRTC.js"></script>
+    <script src="https://github.com/webrtc/samples/blob/gh-pages/src/js/lib/ga.js"></script>
+    <!--<script src="static/scripts.js"></script>-->
+
+</body>
+</html>
