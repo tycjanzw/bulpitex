@@ -61,6 +61,7 @@ io.on('connection', (socket) => {
         socket.emit('sendCode', {sessionId: socket.id});
     });
 
+
     ///////////////
     /*socket.on('offer', (data) => {
         socket.broadcast.emit('offer', data);
@@ -71,5 +72,10 @@ io.on('connection', (socket) => {
     });*/
 
 });
+
+socket.on('sendCode',code => {
+    io.emit('setPeerCode',{pCode:code.p});
+});
+
 
 httpServer.listen(2255);

@@ -41,6 +41,14 @@
             <button id="setRole">Ustaw rolę</button>
         </div>
         
+        <div id="danePeer">
+            <div id="showPeer" hidden></div>
+            <input id="peerID" placeholder="Peer ID" />
+            <button id="callPeer">Call Peer</button> <br />
+            <button id="sendPeerCode">Wyślij kod peer</button>
+            <div id="r"></div>
+        </div>
+
         <ul id="cords"></ul>
 
     </div>
@@ -162,6 +170,14 @@
             socket.emit('sendKey',{k:e.key});
         });*/
         
+        $('#sendPeerCode').click(()=>{
+            var kod = document.getElementById('showPeer').innerHTML;
+            socket.emit('sendCode',{p:kod});
+        });
+
+        socket.on('setPeerCode', function(c){
+            document.getElementById('r').innerHTML = c.pCode;
+        });
 
     </script>
 
