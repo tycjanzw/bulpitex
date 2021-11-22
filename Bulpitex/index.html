@@ -84,7 +84,7 @@
             }
         });
 
-        document.getElementById('setRole').addEventListener('click',function(e){
+        screen.addEventListener('click',function(e){
             //e.preventDefault();
             if(roleVal.value){
                 role=roleVal.value;
@@ -135,6 +135,13 @@
             });
         }
 
+        document.getElementById('remoteScreen').addEventListener('mouseup', function(event){
+            if(!screen.disabled){
+                if (event.button == 2){
+                    socket.emit('sendRightClick');
+                }
+            }
+        });
 
         $("#screenShare").single_double_click(function(event){
             if(!screen.disabled){
