@@ -118,4 +118,7 @@ function pressKey(key){
     else if(key === 'Shift'){
         robot.keyToggle("shift", "down");
     }
+    else{ 
+        robot.keyToggle(key, "down"); 
+    }
 }
