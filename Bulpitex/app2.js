@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('sendKey', keyData => {
-        robot.keyTap(keyData.k);
+        clickKey(keyData.k);
     });
 
     socket.on('getCode', () => {
@@ -73,3 +73,49 @@ io.on('connection', (socket) => {
 });
 
 httpServer.listen(2255);
+
+function clickKey(key){
+    if(key === 'Enter'){ 
+        try {
+            robot.keyTap("enter");
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    else if(key === 'Backspace'){
+        robot.keyTap("backspace");
+    }
+    else if(key === 'Delete'){
+        robot.keyTap("delete");
+    }
+    else if(key === 'Escape'){
+        robot.keyTap("escape");
+    }
+    else if(key === 'ArrowUp'){
+        robot.keyTap("up");
+    }
+    else if(key === 'ArrowDown'){
+        robot.keyTap("down");
+    }
+    else if(key === 'ArrowLeft'){
+        robot.keyTap("left");
+    }
+    else if(key === 'ArrowRight'){
+        robot.keyTap("right");
+    }
+    else if(key === 'Control'){
+        robot.keyTap("control");
+    }
+    else if(key === 'Alt'){
+        robot.keyTap("alt");
+    }
+    else if(key === 'AltGraph'){
+        robot.keyTap("alt");
+    }
+    else if(key === 'Shift'){
+        robot.keyTap("shift");
+    }
+    else{ 
+        robot.keyTap(key); 
+    }
+}
