@@ -336,6 +336,12 @@
             isMouseDown = false;
             socket.emit('mouseUp', {m: false});
         });
+//scroll
+        video.addEventListener('mousewheel', function(e){
+        setTimeout(function(){
+            socket.emit('sendScrool', {s: Math.round(e.deltaY)});
+        },1000);
+        });
 
     </script>
 
