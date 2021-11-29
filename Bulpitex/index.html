@@ -203,6 +203,20 @@
             });
         }
 
+        function addRemoteVideo(stream){
+            var isMouseDown = false;
+
+            let video = document.createElement('video');
+            video.srcObject = stream;
+            video.play();
+            video.setAttribute('id','videoTest')
+            document.getElementById('remoteScreen').append(video);
+
+            $('#videoTest').mouseenter(() => {isOnRemoteDiv = true});
+            $('#videoTest').mouseleave(() => {isOnRemoteDiv = false});
+        
+        }
+
     </script>
 
     <div videoTest></div>
