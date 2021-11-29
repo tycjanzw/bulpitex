@@ -326,11 +326,16 @@
             }
 
         }
-
+//mouseDown
         $('#videoTest').mousedown(() => {
                 isMouseDown = true;
                 socket.emit('mouseDown', {m: true});
             });
+//mouseUp
+        $('#videoTest').mouseup(() => {
+            isMouseDown = false;
+            socket.emit('mouseUp', {m: false});
+        });
 
     </script>
 
