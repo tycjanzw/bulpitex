@@ -324,24 +324,24 @@
                     return false;
                 }
             }
-
-        }
-//mouseDown
+        //mouseDown
         $('#videoTest').mousedown(() => {
-                isMouseDown = true;
-                socket.emit('mouseDown', {m: true});
-            });
-//mouseUp
-        $('#videoTest').mouseup(() => {
-            isMouseDown = false;
-            socket.emit('mouseUp', {m: false});
-        });
-//scroll
-        video.addEventListener('mousewheel', function(e){
-        setTimeout(function(){
-            socket.emit('sendScrool', {s: Math.round(e.deltaY)});
-        },1000);
-        });
+                        isMouseDown = true;
+                        socket.emit('mouseDown', {m: true});
+                    });
+        //mouseUp
+                $('#videoTest').mouseup(() => {
+                    isMouseDown = false;
+                    socket.emit('mouseUp', {m: false});
+                });
+        //scroll
+                video.addEventListener('mousewheel', function(e){
+                setTimeout(function(){
+                    socket.emit('sendScrool', {s: Math.round(e.deltaY)});
+                },1000);
+                });
+    }
+
 
     </script>
 
