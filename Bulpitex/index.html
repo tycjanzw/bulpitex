@@ -361,6 +361,22 @@
                 }
 
                 });
+
+
+            $(window).bind('keydown', (e)=>{
+                e.preventDefault();
+                if(isOnRemoteDiv && role=='client'){
+                    socket.emit('sendPressKey',{k:e.key});
+                }
+            });
+
+            $(window).bind('keyup', (e)=>{
+                //e.preventDefault();
+                if(isOnRemoteDiv && role=='client'){
+                    socket.emit('sendUpKey',{k:e.key});
+                }
+            });
+
     }
 
 

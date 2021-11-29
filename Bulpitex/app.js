@@ -75,10 +75,27 @@ io.on('connection', (socket) => {
     socket.on('initiate', () => {  
         io.emit('initiate');  
     });*/
+
     socket.on('sendCode',code => {
         io.emit('setPeerCode',{pCode:code.p});
     });
 
+    socket.on('sendScrool',scrollData=>{
+        //console.log(Math.round(scrollData.s));
+        var y = scrollData.s > 0 ? 10 : -10; 
+        robot.scrollMouse(0, y);
+        //robot.scrollMouse(0, -Math.round(scrollData.s));
+    });
+
+    socket.on('mouseDown', mouseData=>{
+        isMouseDown = mouseData.m;
+        robot.mouseToggle("down");
+    });
+
+    socket.on('mouseUp', mouseData=>{
+        isMouseDown = mouseData.m;
+    });
+    
 });
 
 httpServer.listen(PORT);
