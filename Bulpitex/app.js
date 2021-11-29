@@ -5,6 +5,7 @@ const {Server} = require('socket.io');
 
 //const {u4: uuidv4} = require("uuid");
 
+const PORT = process.env.PORT || 2255;
 
 const app = express();
 const robot = require('robotjs');
@@ -25,7 +26,7 @@ app.use("/peerjs", peerServer);*/
 
 app.use('/static', express.static('./static/'));
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index2.html');
+    res.sendFile(__dirname + '/index.html');
 });
 
 const io = new Server(httpServer,{ });
@@ -74,10 +75,13 @@ io.on('connection', (socket) => {
     socket.on('initiate', () => {  
         io.emit('initiate');  
     });*/
+    socket.on('sendCode',code => {
+        io.emit('setPeerCode',{pCode:code.p});
+    });
 
 });
 
-httpServer.listen(2255);
+httpServer.listen(PORT);
 
 function pressKey(key){
     if(key === 'Enter'){ 
