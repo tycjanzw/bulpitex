@@ -334,11 +334,32 @@
                     isMouseDown = false;
                     socket.emit('mouseUp', {m: false});
                 });
-        //scroll
+
+                 //scroll
                 video.addEventListener('mousewheel', function(e){
                 setTimeout(function(){
                     socket.emit('sendScrool', {s: Math.round(e.deltaY)});
                 },1000);
+                });
+
+                
+                video.addEventListener('mousemove',function(e){
+
+                var width = $('#videoTest').width();
+                var height = $('#videoTest').height();
+
+                $('#controlScreenSize').html(width + " "+height);
+
+                var posX = $('#videoTest').offset().left;
+                var posY = $('#videoTest').offset().top;
+
+                if(screen.disabled){
+                socket.emit('sendCoords',{x:x, y:y});
+                }
+                if(run && role=='client'){
+                socket.emit('sendCoordFromMouseMove',{x:x, y:y,r:role});
+                }
+
                 });
     }
 
