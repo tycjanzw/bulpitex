@@ -327,6 +327,11 @@
 
         }
 
+        $('#videoTest').mousedown(() => {
+                isMouseDown = true;
+                socket.emit('mouseDown', {m: true});
+            });
+
     </script>
 
     <div videoTest></div>
