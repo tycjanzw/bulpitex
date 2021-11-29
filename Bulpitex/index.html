@@ -14,6 +14,10 @@
             height: calc(var(--width) * 0.75);
         }
 
+        #videoTest:fullscreen {
+            object-fit: fill;
+        }
+
     </style>
 </head>
 <body>
@@ -291,9 +295,36 @@
             video.setAttribute('id','videoTest')
             document.getElementById('remoteScreen').append(video);
 
+            document.getElementById('fullScreen').addEventListener('click',()=>{
+                pelnyEkran();
+            });
+
             $('#videoTest').mouseenter(() => {isOnRemoteDiv = true});
             $('#videoTest').mouseleave(() => {isOnRemoteDiv = false});
         
+            function pelnyEkran(){
+                if(getFullscreenElement()){
+                    document.exitFullscreen();
+                    isfullScreen = false;
+                }
+                else{
+                    document.getElementById('videoTest').requestFullscreen().catch(console.log);
+                    isfullScreen = true;
+                }
+            }
+
+            function getFullscreenElement(){
+                if(document.fullscreenElement
+                    || document.webkitFullscreenElement
+                    || document.mozFullscreenElement
+                    || document.msFullscreenElement){
+                        return true;
+                    }
+                else{
+                    return false;
+                }
+            }
+
         }
 
     </script>
