@@ -214,6 +214,15 @@
             }
         });
 
+        $('#sendPeerCode').click(()=>{
+            var kod = document.getElementById('showPeer').innerHTML;
+            socket.emit('sendCode',{p:kod});
+        });
+
+        socket.on('setPeerCode', function(c){
+            document.getElementById('r').innerHTML = c.pCode;
+        });
+
         /*$(window).bind('keyup', function(e){
             socket.emit('sendKey',{k:e.key});
         });*/
@@ -262,6 +271,16 @@
                 console.log(err+" nie ma streamu");
             });
         }
+
+        $('#callPeer').click((e)=>{
+            let remotePeerId = document.getElementById('peerID').value;
+            $('#showPeer').html('connecting '+remotePeerId);
+            callPeer(remotePeerId);
+            var w = document.getElementById('widthScreen').innerHTML;
+            var h = document.getElementById('heigthScreen').innerHTML;
+            socket.emit('sendScreenSize', {wi:w,he:h});
+            document.getElementById('reconnectBtn').disabled = false;
+        });
 
         function addRemoteVideo(stream){
             var isMouseDown = false;
