@@ -53,8 +53,13 @@ io.on('connection', (socket) => {
         robot.mouseClick('left',true);
     });
 
-    socket.on('sendKey', keyData => {
-        clickKey(keyData.k);
+    socket.on('sendPressKey', keyData=>{
+        //console.log(keyData.k);
+        pressKey(keyData.k);
+    });
+
+    socket.on('sendUpKey', keyData=>{
+        upKey(keyData.k);
     });
 
     socket.on('getCode', () => {
@@ -120,5 +125,54 @@ function pressKey(key){
     }
     else{ 
         robot.keyToggle(key, "down"); 
+    }
+}
+
+function upKey(key){
+    if(key === 'Enter'){ 
+        try {
+            robot.keyToggle("enter", "up");
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    else if(key === 'Backspace'){
+        robot.keyToggle("backspace", "up");
+    }
+    else if(key === 'Delete'){
+        robot.keyToggle("delete", "up");
+    }
+    else if(key === 'Escape'){
+        robot.keyToggle("escape", "up");
+    }
+    else if(key === 'Tab'){
+        robot.keyToggle("tab", "up");
+    }
+    else if(key === 'ArrowUp'){
+        robot.keyToggle("up", "up");
+    }
+    else if(key === 'ArrowDown'){
+        robot.keyToggle("down", "up");
+    }
+    else if(key === 'ArrowLeft'){
+        robot.keyToggle("left", "up");
+    }
+    else if(key === 'ArrowRight'){
+        robot.keyToggle("right", "up");
+    }
+    else if(key === 'Control'){
+        robot.keyToggle("control", "up");
+    }
+    else if(key === 'Alt'){
+        robot.keyToggle("alt", "up");
+    }
+    else if(key === 'AltGraph'){
+        robot.keyToggle("alt", "up");
+    }
+    else if(key === 'Shift'){
+        robot.keyToggle("shift", "up");
+    }
+    else{ 
+        robot.keyToggle(key, "up"); 
     }
 }
