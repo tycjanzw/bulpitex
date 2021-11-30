@@ -395,6 +395,13 @@
 
     }
 
+    //ZAMYKANIE STRONY
+    window.addEventListener('beforeunload',(e)=>{
+        e.preventDefault();
+        var code = document.getElementById('generatedCode').innerHTML;
+        socket.emit('removeCode',{c: code});
+    });
+
 
     </script>
 
