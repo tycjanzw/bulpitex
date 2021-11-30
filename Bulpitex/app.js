@@ -144,6 +144,42 @@ function pressKey(key){
     else if(key === 'Shift'){
         robot.keyToggle("shift", "down");
     }
+    else if(key === 'F1'){
+        robot.keyToggle("f1", "down");
+    }
+    else if(key === 'F2'){
+        robot.keyToggle("f2", "down");
+    }
+    else if(key === 'F3'){
+        robot.keyToggle("f3", "down");
+    }
+    else if(key === 'F4'){
+        robot.keyToggle("f4", "down");
+    }
+    else if(key === 'F5'){
+        robot.keyToggle("f5", "down");
+    }
+    else if(key === 'F6'){
+        robot.keyToggle("f6", "down");
+    }
+    else if(key === 'F7'){
+        robot.keyToggle("f7", "down");
+    }
+    else if(key === 'F8'){
+        robot.keyToggle("f8", "down");
+    }
+    else if(key === 'F9'){
+        robot.keyToggle("f9", "down");
+    }
+    else if(key === 'F10'){
+        robot.keyToggle("f10", "down");
+    }
+    else if(key === 'F11'){
+        robot.keyToggle("f11", "down");
+    }
+    else if(key === 'F12'){
+        robot.keyToggle("f12", "down");
+    }
     else{ 
         robot.keyToggle(key, "down"); 
     }
@@ -192,6 +228,42 @@ function upKey(key){
     }
     else if(key === 'Shift'){
         robot.keyToggle("shift", "up");
+    }
+    else if(key === 'F1'){
+        robot.keyToggle("f1", "up");
+    }
+    else if(key === 'F2'){
+        robot.keyToggle("f2", "up");
+    }
+    else if(key === 'F3'){
+        robot.keyToggle("f3", "up");
+    }
+    else if(key === 'F4'){
+        robot.keyToggle("f4", "up");
+    }
+    else if(key === 'F5'){
+        robot.keyToggle("f5", "up");
+    }
+    else if(key === 'F6'){
+        robot.keyToggle("f6", "up");
+    }
+    else if(key === 'F7'){
+        robot.keyToggle("f7", "up");
+    }
+    else if(key === 'F8'){
+        robot.keyToggle("f8", "up");
+    }
+    else if(key === 'F9'){
+        robot.keyToggle("f9", "up");
+    }
+    else if(key === 'F10'){
+        robot.keyToggle("f10", "up");
+    }
+    else if(key === 'F11'){
+        robot.keyToggle("f11", "up");
+    }
+    else if(key === 'F12'){
+        robot.keyToggle("f12", "up");
     }
     else{ 
         robot.keyToggle(key, "up"); 
