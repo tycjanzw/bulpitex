@@ -13,11 +13,11 @@ function createRoom(){
     peerCon = new Peer(roomID);
     
     peerCon.on('open', id=>{
-        
+        //
     });
     
     peerCon.on('call', call=>{
-        
+        //
     });
     
 }
