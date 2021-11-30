@@ -97,6 +97,10 @@
     
             </div>
 
+            <div id="roomInfo">
+                <button type="button" id="createRoomBtn" class="btn btn-success" data-toggle="button" aria-pressed="false" autocomplete="off">Stwórz pokój</button> 
+            </div>
+
             <ul id="cords"></ul>
             <div id="controlScreenSize"></div>
         </div>
@@ -357,20 +361,24 @@
                 
                 video.addEventListener('mousemove',function(e){
 
-                var width = $('#videoTest').width();
-                var height = $('#videoTest').height();
+                    var width = $('#videoTest').width();
+                    var height = $('#videoTest').height();
 
-                $('#controlScreenSize').html(width + " "+height);
+                    $('#controlScreenSize').html(width + " "+height);
 
-                var posX = $('#videoTest').offset().left;
-                var posY = $('#videoTest').offset().top;
+                    var posX = $('#videoTest').offset().left;
+                    var posY = $('#videoTest').offset().top;
 
-                if(screen.disabled){
-                socket.emit('sendCoords',{x:x, y:y});
-                }
-                if(run && role=='client'){
-                socket.emit('sendCoordFromMouseMove',{x:x, y:y,r:role});
-                }
+                    var x = e.pageX - posX;
+                    var y = e.pageY - posY;
+
+                    if(screen.disabled){
+                        socket.emit('sendCoords',{x:x, y:y});
+                    }
+                    if(run && role=='client'){
+                        //socket.emit('sendCoordFromMouseMove',{x:x, y:y,r:role});
+                        socket.emit('sendCoordFromMouseMove',{x:x, y:y,r:role, w:width, h:height});
+                    }
 
                 });
 
