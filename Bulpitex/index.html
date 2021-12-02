@@ -90,10 +90,11 @@
                   <br>
                 <div class="container" id="generatedCode">
                 </div>
-                <input class="form-control form-control-sm" id="peerID" type="text" placeholder="Wpisz kod peer"><br>
+                    <input class="form-control form-control-sm" id="peerID" type="text" placeholder="Wpisz kod peer"><br>
                     <button type="button" id="callPeer" class="btn btn-success" data-toggle="button" aria-pressed="false" autocomplete="off">Połącz się</button> 
                     <button type="button" id="reconnectBtn" class="btn btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off" disabled>Rozłącz się</button> 
-                <br>
+                    <button type="button" id="shareScreenBtn" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" disabled>Udostępnij ekran</button>
+                <br />
     
             </div>
 
@@ -295,7 +296,12 @@
         $('#callPeer').click((e)=>{
             let remotePeerId = document.getElementById('peerID').value;
             $('#showPeer').html('connecting '+remotePeerId);
-            callPeer(remotePeerId);
+
+            document.getElementById('shareScreenBtn').disabled = false;
+            document.getElementById('shareScreenBtn').addEventListener('click',(id)=>{
+                callPeer(remotePeerId);
+            });
+
             var w = document.getElementById('widthScreen').innerHTML;
             var h = document.getElementById('heigthScreen').innerHTML;
             socket.emit('sendScreenSize', {wi:w,he:h});
@@ -340,23 +346,27 @@
                     return false;
                 }
             }
-        //mouseDown
-        $('#videoTest').mousedown(() => {
-                        isMouseDown = true;
-                        socket.emit('mouseDown', {m: true});
-                    });
-        //mouseUp
-                $('#videoTest').mouseup(() => {
-                    isMouseDown = false;
-                    socket.emit('mouseUp', {m: false});
-                });
+            //mouseDown
+            $('#videoTest').mousedown(() => {
+                isMouseDown = true;
+                socket.emit('mouseDown', {m: true});
+            });
 
-                 //scroll
-                video.addEventListener('mousewheel', function(e){
-                setTimeout(function(){
+            //mouseUp
+            $('#videoTest').mouseup(() => {
+                isMouseDown = false;
+                socket.emit('mouseUp', {m: false});
+            });
+
+            //scroll nieudany
+            video.addEventListener('wheel', function(e){
+                const delta = Math.sign(e.deltaY);
+                socket.emit('sendScrool', {s: delta});
+                e.preventDefault();
+                /*setTimeout(function(){
                     socket.emit('sendScrool', {s: Math.round(e.deltaY)});
-                },1000);
-                });
+                },1000);*/
+            });
 
                 
                 video.addEventListener('mousemove',function(e){
