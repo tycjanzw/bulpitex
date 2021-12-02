@@ -82,8 +82,9 @@ io.on('connection', (socket) => {
 
     socket.on('sendScrool',scrollData=>{
         //console.log(Math.round(scrollData.s));
-        var y = scrollData.s > 0 ? 10 : -10; 
-        robot.scrollMouse(0, y);
+        //var y = scrollData.s > 0 ? 10 : -10; 
+        var valY = scrollData.s;
+        robot.scrollMouse(0, valY);
         //robot.scrollMouse(0, -Math.round(scrollData.s));
     });
 

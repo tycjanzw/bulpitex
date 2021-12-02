@@ -340,23 +340,27 @@
                     return false;
                 }
             }
-        //mouseDown
-        $('#videoTest').mousedown(() => {
-                        isMouseDown = true;
-                        socket.emit('mouseDown', {m: true});
-                    });
-        //mouseUp
-                $('#videoTest').mouseup(() => {
-                    isMouseDown = false;
-                    socket.emit('mouseUp', {m: false});
-                });
+            //mouseDown
+            $('#videoTest').mousedown(() => {
+                isMouseDown = true;
+                socket.emit('mouseDown', {m: true});
+            });
 
-                 //scroll
-                video.addEventListener('mousewheel', function(e){
-                setTimeout(function(){
+            //mouseUp
+            $('#videoTest').mouseup(() => {
+                isMouseDown = false;
+                socket.emit('mouseUp', {m: false});
+            });
+
+            //scroll nieudany
+            video.addEventListener('wheel', function(e){
+                const delta = Math.sign(e.deltaY);
+                socket.emit('sendScrool', {s: delta});
+                e.preventDefault();
+                /*setTimeout(function(){
                     socket.emit('sendScrool', {s: Math.round(e.deltaY)});
-                },1000);
-                });
+                },1000);*/
+            });
 
                 
                 video.addEventListener('mousemove',function(e){
