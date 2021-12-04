@@ -1,0 +1,7 @@
+body {
+    background-color: rgb(128, 128, 128);
+}
+
+#cords { 
+    list-style-type: none; margin: 0; padding: 0; 
+}
