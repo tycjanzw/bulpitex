@@ -193,6 +193,9 @@ function pressKey(key){
     else if(key == 'End'){
         robot.keyToggle("end", "down");
     }
+    else if(key == 'Insert'){
+        robot.keyToggle("insert", "down")
+    }
     else{ 
         robot.keyToggle(key, "down"); 
     }
@@ -289,6 +292,9 @@ function upKey(key){
     }
     else if(key == 'End'){
         robot.keyToggle("end", "up");
+    }
+    else if(key == 'Insert'){
+        robot.keyToggle("insert", "down")
     }
     else{ 
         robot.keyToggle(key, "up"); 
