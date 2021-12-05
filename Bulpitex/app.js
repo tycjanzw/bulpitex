@@ -294,7 +294,7 @@ function upKey(key){
         robot.keyToggle("end", "up");
     }
     else if(key == 'Insert'){
-        robot.keyToggle("insert", "down")
+        robot.keyToggle("insert", "up")
     }
     else{ 
         robot.keyToggle(key, "up"); 
