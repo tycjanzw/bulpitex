@@ -197,7 +197,11 @@ function pressKey(key){
         robot.keyToggle("insert", "down")
     }
     else{ 
-        robot.keyToggle(key, "down"); 
+        try {
+            robot.keyToggle(key, "down"); 
+        } catch (error) {
+            console.log('Nie obsłużono klawisza: '+key);
+        }
     }
 }
 
@@ -297,6 +301,10 @@ function upKey(key){
         robot.keyToggle("insert", "up")
     }
     else{ 
-        robot.keyToggle(key, "up"); 
+        try {
+            robot.keyToggle(key, "up"); 
+        } catch (error) {
+            console.log('Nie obsłużono klawisza: '+key);
+        }
     }
 }
