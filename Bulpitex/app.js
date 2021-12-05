@@ -6,6 +6,7 @@ const {Server} = require('socket.io');
 //const {u4: uuidv4} = require("uuid");
 
 const PORT = process.env.PORT || 2255;
+var tablicaKodow = [];
 
 const app = express();
 const robot = require('robotjs');
@@ -77,7 +78,16 @@ io.on('connection', (socket) => {
     });*/
 
     socket.on('sendCode',code => {
+        tablicaKodow.push(code.p);
         io.emit('setPeerCode',{pCode:code.p});
+    });
+    
+    socket.on('removeCode', code=>{
+        for (let i = 0; i < tablicaKodow.length; i++) {
+            if(tablicaKodow[i] == code.c){
+                tablicaKodow.splice(i, 1);
+            }
+        }
     });
 
     socket.on('sendScrool',scrollData=>{

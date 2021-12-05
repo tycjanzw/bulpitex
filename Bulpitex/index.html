@@ -226,7 +226,7 @@
         /////////////
         /////////////
 
-        var peer = new Peer();
+        var peer = new Peer(generateCode());
         var myStream;
         var currentPeer;
         var peerList = [];
@@ -380,7 +380,14 @@
             });
 
     }
-
+        // GENEROWANIE KODU
+        function generateCode(){
+            var code = '';
+            for(let i=1; i<=12; i++){
+                code += Math.floor(Math.random()*10);
+            }
+            return code;
+        }
 
     </script>
 
