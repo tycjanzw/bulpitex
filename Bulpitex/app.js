@@ -82,8 +82,9 @@ io.on('connection', (socket) => {
 
     socket.on('sendScrool',scrollData=>{
         //console.log(Math.round(scrollData.s));
-        var y = scrollData.s > 0 ? 10 : -10; 
-        robot.scrollMouse(0, y);
+        //var y = scrollData.s > 0 ? 10 : -10; 
+        var valY = scrollData.s;
+        robot.scrollMouse(0, valY);
         //robot.scrollMouse(0, -Math.round(scrollData.s));
     });
 
@@ -180,6 +181,21 @@ function pressKey(key){
     else if(key === 'F12'){
         robot.keyToggle("f12", "down");
     }
+    else if(key == 'PageUp'){
+        robot.keyToggle("pageup", "down");
+    }
+    else if(key == 'PageDown'){
+        robot.keyToggle("pagedown", "down");
+    }
+    else if(key == 'Home'){
+        robot.keyToggle("home", "down");
+    }
+    else if(key == 'End'){
+        robot.keyToggle("end", "down");
+    }
+    else if(key == 'Insert'){
+        robot.keyToggle("insert", "down")
+    }
     else{ 
         try {
             robot.keyToggle(key, "down"); 
@@ -268,6 +284,21 @@ function upKey(key){
     }
     else if(key === 'F12'){
         robot.keyToggle("f12", "up");
+    }
+    else if(key == 'PageUp'){
+        robot.keyToggle("pageup", "up");
+    }
+    else if(key == 'PageDown'){
+        robot.keyToggle("pagedown", "up");
+    }
+    else if(key == 'Home'){
+        robot.keyToggle("home", "up");
+    }
+    else if(key == 'End'){
+        robot.keyToggle("end", "up");
+    }
+    else if(key == 'Insert'){
+        robot.keyToggle("insert", "up")
     }
     else{ 
         try {
