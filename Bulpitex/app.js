@@ -181,7 +181,11 @@ function pressKey(key){
         robot.keyToggle("f12", "down");
     }
     else{ 
-        robot.keyToggle(key, "down"); 
+        try {
+            robot.keyToggle(key, "down"); 
+        } catch (error) {
+            console.log('Nie obsłużono klawisza: '+key);
+        }
     }
 }
 
@@ -266,6 +270,10 @@ function upKey(key){
         robot.keyToggle("f12", "up");
     }
     else{ 
-        robot.keyToggle(key, "up"); 
+        try {
+            robot.keyToggle(key, "up"); 
+        } catch (error) {
+            console.log('Nie obsłużono klawisza: '+key);
+        }
     }
 }
