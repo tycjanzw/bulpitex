@@ -12,7 +12,7 @@
     <div id="container">
 
         <div id="left" style="background-color: rgb(3, 118, 219); width: 25%; height: 95vh;float: left;">
-            <div id="dane">
+            <div id="dane" hidden>
                 <div id="screenSize">
                     <span id="widthScreen" hidden></span>
                     <span id="heigthScreen" hidden></span>
@@ -58,40 +58,27 @@
 
             <div id="danePeer">
                 <div id="showPeer" hidden></div>         
-                <button type="button" id = "sendPeerCode" class="btn btn-dark" data-toggle="button" aria-pressed="false" autocomplete="off">
-                    Wygeneruj kod
-                </button>
+                <button type="button" id="sendPeerCode" class="btn btn-dark" data-toggle="button" aria-pressed="false" autocomplete="off">Wygeneruj kod</button>
                 <br />
-                <div class="container" id="generatedCode"></div>
-                <input class="form-control form-control-sm" id="peerID" type="text" placeholder="Wpisz kod peer"><br>
-                <button type="button" id="callPeer" class="btn btn-success" data-toggle="button" aria-pressed="false" autocomplete="off">Połącz się</button> 
-                <button type="button" id="reconnectBtn" class="btn btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off" disabled>Rozłącz się</button> 
-                <button type="button" id="shareScreenBtn" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" disabled>Udostępnij ekran</button>
-                <br />
-    
-            </div>
 
-            <div id="roomInfo">
-                <button type="button" id="createRoomBtn" class="btn btn-success" data-toggle="button" aria-pressed="false" autocomplete="off">Stwórz pokój</button> 
+                <div id="generatedCode"></div>
+                <input class="form-control form-control-sm" id="peerID" type="text" placeholder="Wpisz kod peer"> <br />
+                <button type="button" id="callPeer" class="btn btn-success" data-toggle="button" aria-pressed="false" autocomplete="off">Połącz się</button> <br />
+                <button type="button" id="reconnectBtn" class="btn btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off" disabled>Rozłącz się</button> <br />
+                <button type="button" id="shareScreenBtn" class="btn btn-warning" data-toggle="button" aria-pressed="false" autocomplete="off" disabled>Udostępnij ekran</button> <br />    
             </div>
 
             <ul id="cords"></ul>
             <div id="controlScreenSize"></div>
         </div>
 
-        <div id="right" style="width: 75%; float: left;">
+        <div id="right" style="width: 75%; height: 95vh; float: left;">
             <div id="screenShareBtn" style="cursor: pointer;" disabled hidden>Udostępnij ekran</div>
-            <!--<div id="screen" style="background-color: black; width: 800px; height:500px;"></div>-->
-            <!--<video id="screenShare" autoplay playsinline muted hidden></video>
-            <video id="screenControl" autoplay playsinline muted hidden></video>-->
             
-            <button type="button" id="fullScreen">Pełny ekran</button> <br />
-            <div id="remoteScreen" oncontextmenu="return false;"></div>
-                
-            </div>
-            
-            <!--<video id="screenControl" autoplay playsinline muted style="visibility: hidden;">-->
-            
+            <button type="button" id="fullScreen">Pełny ekran</button> 
+            <div id="bitrateInfo"></div>
+            <br />
+            <div id="remoteScreen" oncontextmenu="return false;"></div>    
         </div>
 
         <div style="clear: both;"></div>
