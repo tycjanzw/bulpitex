@@ -332,37 +332,34 @@
 
             //scroll nieudany
             video.addEventListener('wheel', function(e){
-                const delta = Math.sign(e.deltaY);
-                socket.emit('sendScrool', {s: delta});
                 e.preventDefault();
-                /*setTimeout(function(){
-                    socket.emit('sendScrool', {s: Math.round(e.deltaY)});
-                },1000);*/
+                //const delta = Math.sign(e.deltaY);
+                //socket.emit('sendScrool', {s: delta});
+                socket.emit('scroll', {x: e.deltaX, y: e.deltaY});
             });
-
                 
-                video.addEventListener('mousemove',function(e){
+            video.addEventListener('mousemove',function(e){
 
-                    var width = $('#videoTest').width();
-                    var height = $('#videoTest').height();
+                var width = $('#videoTest').width();
+                var height = $('#videoTest').height();
 
-                    $('#controlScreenSize').html(width + " "+height);
+                $('#controlScreenSize').html(width + " "+height);
 
-                    var posX = $('#videoTest').offset().left;
-                    var posY = $('#videoTest').offset().top;
+                var posX = $('#videoTest').offset().left;
+                var posY = $('#videoTest').offset().top;
 
-                    var x = e.pageX - posX;
-                    var y = e.pageY - posY;
+                var x = e.pageX - posX;
+                var y = e.pageY - posY;
 
-                    if(screen.disabled){
-                        socket.emit('sendCoords',{x:x, y:y});
-                    }
-                    if(run && role=='client'){
-                        //socket.emit('sendCoordFromMouseMove',{x:x, y:y,r:role});
-                        socket.emit('sendCoordFromMouseMove',{x:x, y:y,r:role, w:width, h:height});
-                    }
+                if(screen.disabled){
+                    socket.emit('sendCoords',{x:x, y:y});
+                }
+                if(run && role=='client'){
+                    //socket.emit('sendCoordFromMouseMove',{x:x, y:y,r:role});
+                    socket.emit('sendCoordFromMouseMove',{x:x, y:y,r:role, w:width, h:height});
+                }
 
-                });
+            });
 
 
             $(window).bind('keydown', (e)=>{
