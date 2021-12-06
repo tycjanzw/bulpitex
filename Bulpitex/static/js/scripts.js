@@ -115,7 +115,7 @@ $('#sendPeerCode').click(()=>{
     var kod = peer.id;
     alert('Twój kod: '+ kod);
 
-    document.getElementById('generatedCode').innerHTML = kod;
+   // document.getElementById('generatedCode').innerHTML = kod;
     
     document.getElementById('shareScreenBtn').disabled = false;
     document.getElementById('shareScreenBtn').addEventListener('click',()=>{
