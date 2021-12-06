@@ -88,6 +88,11 @@ io.on('connection', (socket) => {
         //robot.scrollMouse(0, -Math.round(scrollData.s));
     });
 
+    // SCROLL MYSZKI
+    socket.on('scroll', delta => {
+        robot.scrollMouse(delta.x, delta.y);
+    })
+
     socket.on('mouseDown', mouseData=>{
         isMouseDown = mouseData.m;
         robot.mouseToggle("down");
