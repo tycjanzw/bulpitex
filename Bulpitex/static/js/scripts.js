@@ -1,16 +1,18 @@
 var socket = io();
         
 var role='';
-var run = false;
 var isOnRemoteDiv = false;
 var isfullScreen = false;
+var code='';
+var isJoiner = false;
 
 var input = document.getElementById('x');
 var input2 = document.getElementById('y');
 var roleVal = document.getElementById('roleData');
 //var screen = document.getElementById('screenShare');
-var screen = document.getElementById('remoteScreen');    
+var screen = document.getElementById('remoteScreen');   
 
+// OK
 document.getElementById('form').addEventListener('click',function(e){
     if(input.value && input2.value){
         socket.emit('sendCoordsFromInputs', {x:input.value, y:input2.value});
@@ -19,34 +21,14 @@ document.getElementById('form').addEventListener('click',function(e){
     }
 });
 
-screen.addEventListener('click',function(e){
-    //e.preventDefault();
-    if(roleVal.value){
-        role=roleVal.value;
-        $('#role').html(role);
-        console.log(role);
-        run=true;
-    }
+// OK
+document.getElementById('setRole').addEventListener('click',function(e){
+    var select = document.getElementById('roleSelected');
+    var val = select.options[select.selectedIndex].value;
+    role =val;
 });
 
-
-screen.addEventListener('mousemove',function(e){
-    var posX = $(this).offset().left;
-    var posY = $(this).offset().top;
-    
-    var x = e.pageX - posX;
-    var y = e.pageY - posY;
-    var str = x+" "+y;
-    //$('#cords').html(str);
-    if(screen.disabled){
-        socket.emit('sendCoords',{x:x, y:y});
-    }
-    if(run && role=='client'){
-        socket.emit('sendCoordFromMouseMove',{x:x, y:y,r:role});
-    }
-});
-
-
+// OK
 socket.on('setCoordsToDiv', function(data){
     $('#cords').html(data.x+" "+data.y);
 });
@@ -78,15 +60,16 @@ document.getElementById('remoteScreen').addEventListener('mouseup', function(eve
     }
 });
 
-$("#screenShare").single_double_click(function(event){
+$("#remoteScreen").single_double_click(function(event){
     if(!screen.disabled){
         var posX = $(this).offset().left;
         var posY = $(this).offset().top;
         
         var x = event.pageX - posX;
         var y = event.pageY - posY;
-        //alert("1 kliknięcie "+x+" "+y);
-        socket.emit('sendClick',{x:x,y:y});
+        if (event.button == 0){
+            socket.emit('sendLeftClick');
+        }
     }
 },function(event){
     if(!screen.disabled){
@@ -95,38 +78,95 @@ $("#screenShare").single_double_click(function(event){
         
         var x = event.pageX - posX;
         var y = event.pageY - posY;
-        //alert("2 kliknięcia "+x+" "+y);
-        socket.emit('sendDoubleClick',{x:x,y:y});
+        socket.emit('sendDoubleClick');
     }
 });
 
-$('#sendPeerCode').click(()=>{
-    var kod = peer.id;
-    alert("Twój kod: " + kod)
+socket.on('endStream',daneRozloczenia=>{
+    if(role == "client"){
+        if(daneRozloczenia.r){
+            console.log('end');
+            var v = document.getElementById('videoTest');
+            document.getElementById('remoteScreen').removeChild(v);
+        }
+    }
 });
-
-socket.on('setPeerCode', function(c){
-    document.getElementById('r').innerHTML = c.pCode;
-});
-
-/*$(window).bind('keyup', function(e){
-    socket.emit('sendKey',{k:e.key});
-});*/
-
-
-/////////////
-/////////////
-/////////////
-/////////////
 
 var peerCode = '';
 var peer = new Peer(generateCode());
+
 var myStream;
 var currentPeer;
 var peerList = [];
 
-peer.on('open', function(id){
-    $('#showPeer').html(id);
+
+/*document.getElementById('getGenerateCode').addEventListener('click', function(){
+    //document.getElementById('randomCode').innerHTML = peer.id;
+    //alert(generateCode());
+    code = generateCode();
+});*/
+
+/*socket.on('sendGenerateCode', code=>{
+    peerCode = code.c;
+});*/
+
+$('#sendPeerCode').click(()=>{
+    //var kod = document.getElementById('showPeer').innerHTML;
+    var kod = peer.id;
+    alert('Twój kod: '+ kod);
+
+    document.getElementById('generatedCode').innerHTML = kod;
+    
+    document.getElementById('shareScreenBtn').disabled = false;
+    document.getElementById('shareScreenBtn').addEventListener('click',()=>{
+        //callPeer(kod);
+    });
+
+    document.getElementById('reconnectBtn').disabled = false;
+    document.getElementById('reconnectBtn').addEventListener('click', () => {
+        //window.location.reload(true);
+        //peer.close();
+        //alert('disconnect');
+        //peer.disconnect();
+
+        
+
+        document.getElementById('callPeer').disabled = false;
+        document.getElementById('reconnectBtn').disabled = true;
+        document.getElementById('shareScreenBtn').disabled = true;
+    });
+
+
+    socket.emit('sendCode',{p:kod});
+    document.getElementById('sendPeerCode').disabled = true;
+});
+
+peer.on('close', ()=>{
+    alert('close');
+});
+
+peer.on('disconnected',()=>{
+    alert('reconnect');
+});
+
+socket.on('setPeerCode', c=>{
+    //document.getElementById('generatedCode').innerHTML = c.pCode;
+    //peer = new Peer(c.pCode);
+    //alert(c.pCode);
+    //code = c.pCode;
+});
+
+/*socket.on('sendCode', d=>{
+    document.getElementById('generatedCode').innerHTML = d.sessionId;
+    socket.emit('sendCode',{p:d.sessionId});
+});*/
+
+
+
+peer.on('open', function(){
+    //alert(id);
+    //$('#showPeer').html();
+    console.log('peer connect');
 });
 
 peer.on('call', function(call){
@@ -159,19 +199,84 @@ function callPeer(id){
     });
 }
 
-$('#callPeer').click((e)=>{
+/*$('#callPeer').click(()=>{
+    // /isJoiner = true;
+    //var kod = document.getElementById('peerID').value;
+    //alert(kod);
+    //socket.emit('checkCode', {c: kod});
+
     let remotePeerId = document.getElementById('peerID').value;
     $('#showPeer').html('connecting '+remotePeerId);
-
+    
     document.getElementById('shareScreenBtn').disabled = false;
-    document.getElementById('shareScreenBtn').addEventListener('click',(id)=>{
+    document.getElementById('shareScreenBtn').addEventListener('click',()=>{
         callPeer(remotePeerId);
     });
-
+    
     var w = document.getElementById('widthScreen').innerHTML;
     var h = document.getElementById('heigthScreen').innerHTML;
     socket.emit('sendScreenSize', {wi:w,he:h});
     document.getElementById('reconnectBtn').disabled = false;
+
+    socket.on('codeResult', result => {
+        if(isJoiner){
+            var codeResult = result.r;
+            if(codeResult){
+                //alert('Połączono się');
+                
+            }
+            else{
+                //alert('Nie można się połączyć z kodem: '+document.getElementById('generatedCode').innerHTML);
+            }
+        }
+    });
+
+});*/
+
+// dla Rafała BULPITEX-33
+$('#callPeer').click(()=>{
+    isJoiner = true;
+    var kod = document.getElementById('peerID').value;
+    code = kod;
+    //alert(kod);
+    socket.emit('checkCode', {c: kod});
+});
+
+socket.on('codeResult', result => {
+    if(isJoiner){
+        var codeResult = result.r;
+        if(codeResult){
+            alert('Połączono się');
+            let remotePeerId = document.getElementById('peerID').value;
+            $('#showPeer').html('connecting '+remotePeerId);
+            
+            document.getElementById('shareScreenBtn').disabled = false;
+            document.getElementById('shareScreenBtn').addEventListener('click',()=>{
+                callPeer(remotePeerId);
+            });
+            
+            var w = document.getElementById('widthScreen').innerHTML;
+            var h = document.getElementById('heigthScreen').innerHTML;
+            socket.emit('sendScreenSize', {wi:w,he:h});
+            document.getElementById('reconnectBtn').disabled = false;
+            document.getElementById('callPeer').disabled = true;
+
+            document.getElementById('reconnectBtn').disabled = false;
+            document.getElementById('reconnectBtn').addEventListener('click', () => {
+                //peer.disconnect();
+                document.getElementById('callPeer').disabled = false;
+                document.getElementById('reconnectBtn').disabled = true;
+                document.getElementById('shareScreenBtn').disabled = true;
+            });
+        }
+        else{
+            alert('Nie można się połączyć z kodem: '+document.getElementById('generatedCode').innerHTML);
+        }
+    }
+});
+
+socket.on('getGode', () => {
+    socket.emit('sendCodeToClose', {c: code});
 });
 
 function addRemoteVideo(stream){
@@ -212,52 +317,88 @@ function addRemoteVideo(stream){
             return false;
         }
     }
-    //mouseDown
+
+    // przytrzymanie myszki
     $('#videoTest').mousedown(() => {
         isMouseDown = true;
         socket.emit('mouseDown', {m: true});
     });
-
-    //mouseUp
+    
+    // zwolnienie przycisku myszki
     $('#videoTest').mouseup(() => {
         isMouseDown = false;
         socket.emit('mouseUp', {m: false});
     });
 
-    //scroll nieudany
+    // scrool nieudany
     video.addEventListener('wheel', function(e){
+        if(/*isOnRemoteDiv && */role=='client'){
+            //const delta = Math.sign(e.deltaY);
+            //socket.emit('sendScrool', {s: delta});
+            e.preventDefault();
+            socket.emit('scroll', {x: e.deltaX, y: e.deltaY});
+        }
+    });
+
+    /*video.addEventListener('wheel', function(e){
         const delta = Math.sign(e.deltaY);
         socket.emit('sendScrool', {s: delta});
         e.preventDefault();
-        /*setTimeout(function(){
-            socket.emit('sendScrool', {s: Math.round(e.deltaY)});
-        },1000);*/
-    });
+        //socket.emit('sendScrool', {s: Math.round(e.deltaY)});
+        //setTimeout(function(){
+        //    socket.emit('sendScrool', {s: Math.round(e.deltaY)});
+        //},1000);
+    });*/
 
-        
-        video.addEventListener('mousemove',function(e){
+    /*$('#videoTest').addEventListener('wheel ', function(e){
+        e.preventDefault();
+        const delta = Math.sign(event.deltaY);
+        socket.emit('sendScrool', {s: delta});
+    });*/  
 
+    video.addEventListener('mousemove',function(e){
+
+        if(isfullScreen){
             var width = $('#videoTest').width();
             var height = $('#videoTest').height();
-
             $('#controlScreenSize').html(width + " "+height);
-
+            
             var posX = $('#videoTest').offset().left;
             var posY = $('#videoTest').offset().top;
-
+            
             var x = e.pageX - posX;
             var y = e.pageY - posY;
-
+            
+            var str = x+" "+y;
             if(screen.disabled){
                 socket.emit('sendCoords',{x:x, y:y});
             }
-            if(run && role=='client'){
-                //socket.emit('sendCoordFromMouseMove',{x:x, y:y,r:role});
-                socket.emit('sendCoordFromMouseMove',{x:x, y:y,r:role, w:width, h:height});
+            if(role=='client'){
+                socket.emit('sendCoordFromMouseMove',{x:x, y:y, w:width, h:height});
             }
-
-        });
-
+        }
+        else{
+            var width = $('#videoTest').width();
+            var height = $('#videoTest').height();
+            
+            $('#controlScreenSize').html(width + " "+height);
+            
+            var posX = $('#videoTest').offset().left;
+            var posY = $('#videoTest').offset().top;
+            
+            var x = e.pageX - posX;
+            var y = e.pageY - posY;
+            
+            var str = x+" "+y;
+            if(screen.disabled){
+                socket.emit('sendCoords',{x:x, y:y});
+            }
+            if(role=='client'){
+                socket.emit('sendCoordFromMouseMove',{x:x, y:y, w:width, h:height});
+            }
+        }
+        
+    });
 
     $(window).bind('keydown', (e)=>{
         e.preventDefault();
@@ -265,15 +406,34 @@ function addRemoteVideo(stream){
             socket.emit('sendPressKey',{k:e.key});
         }
     });
-
+    
     $(window).bind('keyup', (e)=>{
-        //e.preventDefault();
         if(isOnRemoteDiv && role=='client'){
             socket.emit('sendUpKey',{k:e.key});
         }
     });
 
 }
+
+function reconnectStream(){
+    console.log('The user has ended sharing the screen');
+    var v = document.getElementById('videoTest');
+    document.getElementById('reconnectBtn').disabled = true;
+    //document.getElementById('remoteScreen').removeChild(v);
+    socket.emit('sendEndStream');
+}
+
+function scrool(e){
+    //console.log(e.deltaX+" "+e.deltaY);
+    socket.emit('sendScrool', {s: e.deltaY});
+}
+
+function scrool(e){
+    //console.log(e.deltaX+" "+e.deltaY);
+    socket.emit('sendScrool', {s: video.scrollY});
+}
+
+// GENEROWANIE KODU
 function generateCode(){
     var code = '';
     for(let i=0; i<10; i++){
@@ -281,3 +441,11 @@ function generateCode(){
     }
     return code;
 }
+
+//ZAMYKANIE STRONY
+window.addEventListener('beforeunload',(e)=>{
+    e.preventDefault();
+    var code = document.getElementById('generatedCode').innerHTML;
+    socket.emit('removeCode',{c: code});
+});
+
