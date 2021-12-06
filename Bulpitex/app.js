@@ -16,14 +16,7 @@ const httpServer = createServer({
     cert: readFileSync('cert/cert.pem')
 }, app);
 
-
-/*const { ExpressPeerServer } = require("peer");
-const peerServer = ExpressPeerServer(httpServer, {
-    debug: false,
-});
-app.use("/peerjs", peerServer);*/
-
-
+var screenSize; 
 
 app.use('/static', express.static('./static/'));
 app.get('/', (req, res) => {
@@ -33,59 +26,69 @@ app.get('/', (req, res) => {
 const io = new Server(httpServer,{ });
 
 io.on('connection', (socket) => {
-    socket.on('sendCoords',data=>{
-        io.emit('setCoordsToDiv',data);
-    });
-
-    socket.on('sendCoordsFromInputs', data2=>{
-        robot.moveMouse(data2.x,data2.y);
-    });
-
-    socket.on('sendCoordFromMouseMove', data3=>{
-        if(data3.r == 'client'){
-          robot.moveMouse(data3.x,data3.y);
-        }
-    });
-
-    socket.on('sendClick',dataTest=>{
-        robot.mouseClick();
-    });
+    let isMouseDown = false;
     
-    socket.on('sendDoubleClick',dataTest=>{
+    // USTAWIENIE ROZMIARU EKRANU
+    socket.on('sendScreenSize', scrSize=>{
+        screenSize = scrSize;
+    }); 
+    
+    // WYSŁANIE POŁOŻENIE MYSZKI 
+    socket.on('sendCoords',data=>{
+        // WYSŁANIE POŁOŻENIA MYSZKI
+        io.emit('setCoordsToDiv',data);
+    }); 
+
+     // USTAWIENIE X-Y Z INPUTÓW
+    socket.on('sendCoordsFromInputs', data=>{
+        robot.moveMouse(data.x,data.y);
+    }); 
+
+     // USTAWIENIE POŁOŻENIE Z PRZESUNIĘCIA MYSZKI
+    socket.on('sendCoordFromMouseMove', data=>{
+        robot.moveMouse(Math.round(screenSize.wi/data.w*data.x),Math.round(screenSize.he/data.h*data.y));
+    }); 
+
+    // KLIKNIĘCIE LEWYM PRZYCISKIEM MYSZKI
+    socket.on('sendLeftClick',()=>{
+        robot.mouseClick();
+    }); 
+
+    // KLIKNIĘCIE PRAWYM PRZYCISKIEM MYSZKI
+    socket.on('sendRightClick',()=>{
+        robot.mouseClick('right');
+    }); 
+    
+     // KLIKNIĘCIE LEWYM PRZYCISKIEM MYSZKI x2
+    socket.on('sendDoubleClick',()=>{
         robot.mouseClick('left',true);
     });
 
     // KLIKNIĘCIE KLAWISZEM
     socket.on('sendPressKey', keyData=>{
-        //console.log(keyData.k);
-        //pressKey(keyData.k);
         setKeyToogle(keyData.k, "down");
     });
 
-    // ZWOLNIENIE KLAWISZEM
+    // ZWOLNIENIE KLAWISZA
     socket.on('sendUpKey', keyData=>{
         //upKey(keyData.k);
         setKeyToogle(keyData.k, "up");
     });
 
-    socket.on('getCode', () => {
-        socket.emit('sendCode', {sessionId: socket.id});
-    });
-
-    ///////////////
-    /*socket.on('offer', (data) => {
-        socket.broadcast.emit('offer', data);
-    });
-
-    socket.on('initiate', () => {  
-        io.emit('initiate');  
-    });*/
-
+    // WYSŁANIE KODU
     socket.on('sendCode',code => {
-        tablicaKodow.push(code.p);
-        io.emit('setPeerCode',{pCode:code.p});
+        console.log(tablicaKodow.length);
+        tablicaKodow.push([code.p,1]);
+        //console.log(code.p);
+        //io.emit('setPeerCode',{pCode:code.p});
+        //tablicaKodow.forEach(test);
+        for(let i=0; i<tablicaKodow.length; i++){
+            console.log(tablicaKodow[i][0]+" "+tablicaKodow[i][1]);
+        }
     });
-    
+
+
+    // USUNIECIE KODU
     socket.on('removeCode', code=>{
         for (let i = 0; i < tablicaKodow.length; i++) {
             if(tablicaKodow[i] == code.c){
@@ -94,6 +97,7 @@ io.on('connection', (socket) => {
         }
     });
 
+    // USTAWIENIE SCROLL MYSZKI
     socket.on('sendScrool',scrollData=>{
         //console.log(Math.round(scrollData.s));
         //var y = scrollData.s > 0 ? 10 : -10; 
@@ -107,11 +111,13 @@ io.on('connection', (socket) => {
         robot.scrollMouse(delta.x, delta.y);
     })
 
+    // PRZYTRZYMANIE MYSZKI
     socket.on('mouseDown', mouseData=>{
         isMouseDown = mouseData.m;
         robot.mouseToggle("down");
     });
 
+    // ZWOLNIENIE PRZYTRZYMANIA MYSZKI
     socket.on('mouseUp', mouseData=>{
         isMouseDown = mouseData.m;
     });
