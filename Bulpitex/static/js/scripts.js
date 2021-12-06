@@ -101,8 +101,8 @@ $("#screenShare").single_double_click(function(event){
 });
 
 $('#sendPeerCode').click(()=>{
-    var kod = document.getElementById('showPeer').innerHTML;
-    socket.emit('sendCode',{p:kod});
+    var kod = peer.id;
+    alert("Twój kod: " + kod)
 });
 
 socket.on('setPeerCode', function(c){
@@ -119,7 +119,8 @@ socket.on('setPeerCode', function(c){
 /////////////
 /////////////
 
-var peer = new Peer();
+var peerCode = '';
+var peer = new Peer(generateCode());
 var myStream;
 var currentPeer;
 var peerList = [];
@@ -272,4 +273,11 @@ function addRemoteVideo(stream){
         }
     });
 
+}
+function generateCode(){
+    var code = '';
+    for(let i=0; i<10; i++){
+        code += Math.floor(Math.random()*10);
+    }
+    return code;
 }
