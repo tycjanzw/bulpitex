@@ -86,7 +86,34 @@ io.on('connection', (socket) => {
             console.log(tablicaKodow[i][0]+" "+tablicaKodow[i][1]);
         }
     });
-
+    
+    // SPRAWEDZANIE KODU
+    socket.on('checkCode', code => {
+        var countOfCodes = 0;
+        var index;
+        if(tablicaKodow.length == 0){
+            io.emit('codeResult',{r: false});
+        }
+        else{
+            for(let i=0; i < tablicaKodow.length; i++){
+                if(code.c == tablicaKodow[i][0]){
+                    countOfCodes += 1;
+                    index = i;
+                    i=tablicaKodow.length;
+                }
+            }
+            if(countOfCodes==1){
+                tablicaKodow[index][1]+=1;
+                // for(let i=0; i<tablicaKodow.length; i++){
+                //     console.log(tablicaKodow[i][0]+" "+tablicaKodow[i][1]);
+                // }
+                io.emit('codeResult',{r: true});
+            }
+            else{
+                io.emit('codeResult',{r: false});
+            }
+        }
+    });
 
     // USUNIECIE KODU
     socket.on('removeCode', code=>{
