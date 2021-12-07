@@ -123,10 +123,12 @@ io.on('connection', (socket) => {
     // USUNIECIE KODU
     socket.on('removeCode', code=>{
         for (let i = 0; i < tablicaKodow.length; i++) {
-            if(tablicaKodow[i] == code.c){
+            if(tablicaKodow[i][0] == code.c){
                 tablicaKodow.splice(i, 1);
             }
         }
+
+        io.emit('refresh');
     });
 
     // ZAKOŃCZENIE STREAMOWANIA OBRAZU

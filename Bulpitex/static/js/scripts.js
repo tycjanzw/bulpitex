@@ -86,10 +86,10 @@ $("#remoteScreen").single_double_click(function(event){
 });
 
 socket.on('endStream',daneRozloczenia=>{
-    if(role == "client"){
-        if(daneRozloczenia.r){
-            console.log('end');
-            var v = document.getElementById('videoTest');
+    if(daneRozloczenia.r){
+        console.log('end');
+        var v = document.getElementById('videoTest');
+        if(v!=null){
             document.getElementById('remoteScreen').removeChild(v);
         }
     }
@@ -352,6 +352,13 @@ function reconnectStream(){
 }
 
 
+document.getElementById('disconnectBtn').addEventListener('click',()=>{
+    socket.emit('removeCode', {c: code});
+});
+
+socket.on('refresh', ()=>{
+    window.location.reload(true);
+});
 
 // GENEROWANIE KODU
 function generateCode(){
