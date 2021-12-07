@@ -4,6 +4,9 @@ var role='';
 var isOnRemoteDiv = false;
 var isfullScreen = false;
 var code='';
+var secondCode = '';
+
+var isCreated = false;
 var isJoiner = false;
 
 var input = document.getElementById('x');
@@ -99,41 +102,31 @@ var myStream;
 var currentPeer;
 var peerList = [];
 
-
-/*document.getElementById('getGenerateCode').addEventListener('click', function(){
-    //document.getElementById('randomCode').innerHTML = peer.id;
-    //alert(generateCode());
-    code = generateCode();
-});*/
-
-/*socket.on('sendGenerateCode', code=>{
-    peerCode = code.c;
-});*/
-
 $('#sendPeerCode').click(()=>{
-    //var kod = document.getElementById('showPeer').innerHTML;
+    isCreated = true;
     var kod = peer.id;
     alert('Twój kod: '+ kod);
 
-   // document.getElementById('generatedCode').innerHTML = kod;
+    // document.getElementById('generatedCode').innerHTML = kod;
     
     document.getElementById('shareScreenBtn').disabled = false;
     document.getElementById('shareScreenBtn').addEventListener('click',()=>{
-        //callPeer(kod);
+        if(secondCode!='' && secondCode!=' '){
+            callPeer(secondCode);
+        }
     });
 
-    document.getElementById('reconnectBtn').disabled = false;
-    document.getElementById('reconnectBtn').addEventListener('click', () => {
+    document.getElementById('disconnectBtn').disabled = false;
+    document.getElementById('disconnectBtn').addEventListener('click', () => {
         //window.location.reload(true);
         //peer.close();
         //alert('disconnect');
         //peer.disconnect();
 
-        
-
         document.getElementById('callPeer').disabled = false;
-        document.getElementById('reconnectBtn').disabled = true;
+        document.getElementById('disconnectBtn').disabled = true;
         document.getElementById('shareScreenBtn').disabled = true;
+        document.getElementById('sendPeerCode').disabled = false;
     });
 
 
@@ -148,20 +141,6 @@ peer.on('close', ()=>{
 peer.on('disconnected',()=>{
     alert('reconnect');
 });
-
-socket.on('setPeerCode', c=>{
-    //document.getElementById('generatedCode').innerHTML = c.pCode;
-    //peer = new Peer(c.pCode);
-    //alert(c.pCode);
-    //code = c.pCode;
-});
-
-/*socket.on('sendCode', d=>{
-    document.getElementById('generatedCode').innerHTML = d.sessionId;
-    socket.emit('sendCode',{p:d.sessionId});
-});*/
-
-
 
 peer.on('open', function(){
     //alert(id);
@@ -199,41 +178,6 @@ function callPeer(id){
     });
 }
 
-/*$('#callPeer').click(()=>{
-    // /isJoiner = true;
-    //var kod = document.getElementById('peerID').value;
-    //alert(kod);
-    //socket.emit('checkCode', {c: kod});
-
-    let remotePeerId = document.getElementById('peerID').value;
-    $('#showPeer').html('connecting '+remotePeerId);
-    
-    document.getElementById('shareScreenBtn').disabled = false;
-    document.getElementById('shareScreenBtn').addEventListener('click',()=>{
-        callPeer(remotePeerId);
-    });
-    
-    var w = document.getElementById('widthScreen').innerHTML;
-    var h = document.getElementById('heigthScreen').innerHTML;
-    socket.emit('sendScreenSize', {wi:w,he:h});
-    document.getElementById('reconnectBtn').disabled = false;
-
-    socket.on('codeResult', result => {
-        if(isJoiner){
-            var codeResult = result.r;
-            if(codeResult){
-                //alert('Połączono się');
-                
-            }
-            else{
-                //alert('Nie można się połączyć z kodem: '+document.getElementById('generatedCode').innerHTML);
-            }
-        }
-    });
-
-});*/
-
-// dla Rafała BULPITEX-33
 $('#callPeer').click(()=>{
     isJoiner = true;
     var kod = document.getElementById('peerID').value;
@@ -249,7 +193,7 @@ socket.on('codeResult', result => {
             alert('Połączono się');
             let remotePeerId = document.getElementById('peerID').value;
             $('#showPeer').html('connecting '+remotePeerId);
-            
+            code = remotePeerId;
             document.getElementById('shareScreenBtn').disabled = false;
             document.getElementById('shareScreenBtn').addEventListener('click',()=>{
                 callPeer(remotePeerId);
@@ -258,14 +202,14 @@ socket.on('codeResult', result => {
             var w = document.getElementById('widthScreen').innerHTML;
             var h = document.getElementById('heigthScreen').innerHTML;
             socket.emit('sendScreenSize', {wi:w,he:h});
-            document.getElementById('reconnectBtn').disabled = false;
+            document.getElementById('disconnectBtn').disabled = false;
             document.getElementById('callPeer').disabled = true;
 
-            document.getElementById('reconnectBtn').disabled = false;
-            document.getElementById('reconnectBtn').addEventListener('click', () => {
+            document.getElementById('disconnectBtn').disabled = false;
+            document.getElementById('disconnectBtn').addEventListener('click', () => {
                 //peer.disconnect();
                 document.getElementById('callPeer').disabled = false;
-                document.getElementById('reconnectBtn').disabled = true;
+                document.getElementById('disconnectBtn').disabled = true;
                 document.getElementById('shareScreenBtn').disabled = true;
             });
         }
@@ -275,8 +219,8 @@ socket.on('codeResult', result => {
     }
 });
 
-socket.on('getGode', () => {
-    socket.emit('sendCodeToClose', {c: code});
+socket.on('sendCodeToCreatred', kod=>{
+    secondCode = kod.c;
 });
 
 function addRemoteVideo(stream){
@@ -340,22 +284,6 @@ function addRemoteVideo(stream){
         }
     });
 
-    /*video.addEventListener('wheel', function(e){
-        const delta = Math.sign(e.deltaY);
-        socket.emit('sendScrool', {s: delta});
-        e.preventDefault();
-        //socket.emit('sendScrool', {s: Math.round(e.deltaY)});
-        //setTimeout(function(){
-        //    socket.emit('sendScrool', {s: Math.round(e.deltaY)});
-        //},1000);
-    });*/
-
-    /*$('#videoTest').addEventListener('wheel ', function(e){
-        e.preventDefault();
-        const delta = Math.sign(event.deltaY);
-        socket.emit('sendScrool', {s: delta});
-    });*/  
-
     video.addEventListener('mousemove',function(e){
 
         if(isfullScreen){
@@ -418,20 +346,12 @@ function addRemoteVideo(stream){
 function reconnectStream(){
     console.log('The user has ended sharing the screen');
     var v = document.getElementById('videoTest');
-    document.getElementById('reconnectBtn').disabled = true;
+    document.getElementById('disconnectBtn').disabled = true;
     //document.getElementById('remoteScreen').removeChild(v);
     socket.emit('sendEndStream');
 }
 
-function scrool(e){
-    //console.log(e.deltaX+" "+e.deltaY);
-    socket.emit('sendScrool', {s: e.deltaY});
-}
 
-function scrool(e){
-    //console.log(e.deltaX+" "+e.deltaY);
-    socket.emit('sendScrool', {s: video.scrollY});
-}
 
 // GENEROWANIE KODU
 function generateCode(){
@@ -443,9 +363,9 @@ function generateCode(){
 }
 
 //ZAMYKANIE STRONY
-window.addEventListener('beforeunload',(e)=>{
+/*window.addEventListener('beforeunload',(e)=>{
     e.preventDefault();
     var code = document.getElementById('generatedCode').innerHTML;
     socket.emit('removeCode',{c: code});
-});
+});*/
 

@@ -87,6 +87,11 @@ io.on('connection', (socket) => {
         }
     });
     
+    // WYSLANIE KODU DO GOSPODARZA
+    socket.on('getCodeToCreatred', kod=>{
+        io.emit('sendCodeToCreatred', {c: kod.c});
+    });
+
     // SPRAWEDZANIE KODU
     socket.on('checkCode', code => {
         var countOfCodes = 0;
@@ -122,6 +127,11 @@ io.on('connection', (socket) => {
                 tablicaKodow.splice(i, 1);
             }
         }
+    });
+
+    // ZAKOŃCZENIE STREAMOWANIA OBRAZU
+    socket.on('sendEndStream',()=>{
+        io.emit('endStream',{r:true});
     });
 
     // USTAWIENIE SCROLL MYSZKI
