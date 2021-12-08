@@ -95,8 +95,14 @@ socket.on('endStream',daneRozloczenia=>{
     }
 });
 
+// ICECANDIDATE
+var configuration = {
+    "iceServers": [{ url: 'stun:stun.1.google.com:19302' }] 
+};
+
 var peerCode = '';
-var peer = new Peer(generateCode());
+//var peer = new Peer(generateCode());
+var peer = new Peer(generateCode(), configuration);
 
 var myStream;
 var currentPeer;
