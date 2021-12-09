@@ -10,6 +10,7 @@ var tablicaKodow = [];
 
 const app = express();
 const robot = require('robotjs');
+const {mouse} = require("@nut-tree/nut-js");
 
 const httpServer = createServer({
     key: readFileSync('cert/key.pem'),
@@ -47,16 +48,21 @@ io.on('connection', (socket) => {
      // USTAWIENIE POŁOŻENIE Z PRZESUNIĘCIA MYSZKI
     socket.on('sendCoordFromMouseMove', data=>{
         robot.moveMouse(Math.round(screenSize.wi/data.w*data.x),Math.round(screenSize.he/data.h*data.y));
+        //var point = new Point(Math.floor(screenSize.wi/data.w*data.x),Math.floor(screenSize.he/data.h*data.y));
+        //mouse.move(point);
+        //mouse.move(Math.floor(screenSize.wi/data.w*data.x),Math.floor(screenSize.he/data.h*data.y));
     }); 
 
     // KLIKNIĘCIE LEWYM PRZYCISKIEM MYSZKI
     socket.on('sendLeftClick',()=>{
-        robot.mouseClick();
+        //robot.mouseClick();
+        mouse.leftClick();
     }); 
 
     // KLIKNIĘCIE PRAWYM PRZYCISKIEM MYSZKI
     socket.on('sendRightClick',()=>{
-        robot.mouseClick('right');
+        //robot.mouseClick('right');
+        mouse.rightClick();
     }); 
     
      // KLIKNIĘCIE LEWYM PRZYCISKIEM MYSZKI x2
@@ -145,9 +151,10 @@ io.on('connection', (socket) => {
         //robot.scrollMouse(0, -Math.round(scrollData.s));
     });
 
-    // SCROLL MYSZKI
+    // SCROLL MYSZKI - DZIAŁAJĄCE
     socket.on('scroll', delta => {
-        robot.scrollMouse(delta.x, delta.y);
+        //robot.scrollMouse(delta.x, delta.y);
+        mouse.scrollDown(delta.y);
     })
 
     // PRZYTRZYMANIE MYSZKI
