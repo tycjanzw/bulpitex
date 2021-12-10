@@ -42,15 +42,17 @@ io.on('connection', (socket) => {
 
      // USTAWIENIE X-Y Z INPUTÓW
     socket.on('sendCoordsFromInputs', data=>{
-        robot.moveMouse(data.x,data.y);
+        //robot.moveMouse(data.x,data.y);
+        try {
+            mouse.move(straightTo(new Point(data.x,data.y)));
+        } catch (error) {
+            console.log(error);
+        }
     }); 
 
      // USTAWIENIE POŁOŻENIE Z PRZESUNIĘCIA MYSZKI
     socket.on('sendCoordFromMouseMove', data=>{
-        robot.moveMouse(Math.round(screenSize.wi/data.w*data.x),Math.round(screenSize.he/data.h*data.y));
-        //var point = new Point(Math.floor(screenSize.wi/data.w*data.x),Math.floor(screenSize.he/data.h*data.y));
-        //mouse.move(point);
-        //mouse.move(Math.floor(screenSize.wi/data.w*data.x),Math.floor(screenSize.he/data.h*data.y));
+        mouse.move(straightTo(new Point(Math.floor(screenSize.wi/data.w*data.x),Math.floor(screenSize.he/data.h*data.y))));
     }); 
 
     // KLIKNIĘCIE LEWYM PRZYCISKIEM MYSZKI
@@ -67,7 +69,10 @@ io.on('connection', (socket) => {
     
      // KLIKNIĘCIE LEWYM PRZYCISKIEM MYSZKI x2
     socket.on('sendDoubleClick',()=>{
-        robot.mouseClick('left',true);
+        //robot.mouseClick('left',true);
+        for(let i=0; i<2; i++){
+            mouse.leftClick();
+        }
     });
 
     // KLIKNIĘCIE KLAWISZEM
@@ -142,7 +147,7 @@ io.on('connection', (socket) => {
         io.emit('endStream',{r:true});
     });
 
-    // USTAWIENIE SCROLL MYSZKI
+    // USTAWIENIE SCROLL MYSZKI - NIEDZIAŁAJĄCE
     socket.on('sendScrool',scrollData=>{
         //console.log(Math.round(scrollData.s));
         //var y = scrollData.s > 0 ? 10 : -10; 
@@ -160,12 +165,14 @@ io.on('connection', (socket) => {
     // PRZYTRZYMANIE MYSZKI
     socket.on('mouseDown', mouseData=>{
         isMouseDown = mouseData.m;
-        robot.mouseToggle("down");
+        //robot.mouseToggle("down");
+        mouse.pressButton(Button.LEFT);
     });
 
     // ZWOLNIENIE PRZYTRZYMANIA MYSZKI
     socket.on('mouseUp', mouseData=>{
         isMouseDown = mouseData.m;
+        //mouse.releaseButton(Button.LEFT);
     });
     
 });
