@@ -27,7 +27,7 @@ test('Kody nie są poprawne', ()=>{
     expect(sprawdzKod('0987678765', tablicaKodow2)).toBe(false);
 });
 
-test('Kod nie jest poprawny', ()=>{
+test('Kod są poprawne', ()=>{
     expect(sprawdzKod('3251498897', tablicaKodow2)).toBe(true);
     expect(sprawdzKod('2864815301', tablicaKodow2)).toBe(true);
     expect(sprawdzKod('5789653010', tablicaKodow2)).toBe(true);
