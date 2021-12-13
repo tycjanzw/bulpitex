@@ -119,11 +119,16 @@ io.on('connection', (socket) => {
                 }
             }
             if(countOfCodes==1){
-                tablicaKodow[index][1]+=1;
-                // for(let i=0; i<tablicaKodow.length; i++){
-                //     console.log(tablicaKodow[i][0]+" "+tablicaKodow[i][1]);
-                // }
-                io.emit('codeResult',{r: true});
+                if(tablicaKodow[index][1] < 2){
+                    tablicaKodow[index][1]+=1;
+                    for(let i=0; i<tablicaKodow.length; i++){
+                        console.log(tablicaKodow[i][0]+" "+tablicaKodow[i][1]);
+                    }
+                    io.emit('codeResult',{r: true});
+                }
+                else{
+                    io.emit('twoConnectedUsers');
+                }
             }
             else{
                 io.emit('codeResult',{r: false});

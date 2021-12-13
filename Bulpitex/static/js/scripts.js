@@ -8,6 +8,7 @@ var secondCode = '';
 
 var isCreated = false;
 var isJoiner = false;
+var isJoined = false;
 
 var input = document.getElementById('x');
 var input2 = document.getElementById('y');
@@ -218,10 +219,19 @@ socket.on('codeResult', result => {
                 document.getElementById('disconnectBtn').disabled = true;
                 document.getElementById('shareScreenBtn').disabled = true;
             });
+
+            socket.emit('getCodeToCreatred',{c:peer.id});
+            isJoined = true;
         }
         else{
             alert('Nie można się połączyć z kodem: '+document.getElementById('generatedCode').innerHTML);
         }
+    }
+});
+
+socket.on('twoConnectedUsers', ()=>{
+    if(isJoiner && !isJoined){
+        alert('W pokoju jest dwóch użytkoników');
     }
 });
 
