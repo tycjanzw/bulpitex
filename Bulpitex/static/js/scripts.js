@@ -92,6 +92,7 @@ socket.on('endStream',daneRozloczenia=>{
         var v = document.getElementById('videoTest');
         if(v!=null){
             document.getElementById('remoteScreen').removeChild(v);
+            $('#ErrorMsg').text('Nie ma obrazu streama');
         }
     }
 });
@@ -146,7 +147,8 @@ peer.on('close', ()=>{
 });
 
 peer.on('disconnected',()=>{
-    alert('reconnect');
+    alert('disconnected');
+    socket.emit('sendEndStream');
 });
 
 peer.on('open', function(){
@@ -178,7 +180,7 @@ function callPeer(id){
             }
         })
         stream.getVideoTracks()[0].addEventListener('ended', () => {
-            reconnectStream();
+            endStream();
         });
     }).catch((err)=>{
         console.log(err+" nie ma streamu");
@@ -359,12 +361,14 @@ function addRemoteVideo(stream){
 
 }
 
-function reconnectStream(){
+function endStream(){
     console.log('The user has ended sharing the screen');
     var v = document.getElementById('videoTest');
     document.getElementById('disconnectBtn').disabled = true;
     //document.getElementById('remoteScreen').removeChild(v);
+    
     socket.emit('sendEndStream');
+    $('#ErrorMsg').text('Nie ma obrazu streama');
 }
 
 
