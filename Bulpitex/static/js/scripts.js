@@ -376,6 +376,10 @@ socket.on('refresh', ()=>{
     window.location.reload(true);
 });
 
+socket.on('streamError', data=>{
+    $('#ErrorMsg').val(data.m);
+});
+
 // GENEROWANIE KODU
 function generateCode(){
     var code = '';
