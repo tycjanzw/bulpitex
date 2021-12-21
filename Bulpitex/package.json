@@ -6,6 +6,17 @@
     "robotjs": "^0.6.0",
     "socket.io": "^4.3.2",
     "uuid": "^8.3.2",
+    "supertest": "^6.1.6",
     "winston": "^3.3.3"
+  },
+    "devDependencies": {
+    "jest": "^27.4.4"
+  },
+  "scripts": {
+    "test": "jest",
+    "start": "node app.js"
+  },
+    "engines": {
+    "node": "16.13"
   }
 }
