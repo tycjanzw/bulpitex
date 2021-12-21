@@ -381,7 +381,7 @@ socket.on('refresh', ()=>{
 });
 
 socket.on('streamError', data=>{
-    $('#ErrorMsg').val(data.m);
+    $('#ErrorMsg').text(data.m);
 });
 
 // GENEROWANIE KODU

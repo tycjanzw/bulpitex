@@ -254,11 +254,16 @@ function setKeyToogle(key, val){
             robot.keyToggle("insert", val); break;
         case 'PrintScreen':
             robot.keyToggle("printscreen", val); break;
+        case 'Meta':
+            robot.keyToggle("command", val); break;
         default:{
             try {
                 robot.keyToggle(key, val); 
             } catch (error) {
                 console.log('Nie obsłużono klawisza: '+key);
+                var msg = 'Nie obsłużono klawisza: '+key;
+                io.emit('streamError', {m: msg});
+                //socket.emit('streamError', {m:'Nie obsłużono klawisza: '+key});
             }
             break;
         }
